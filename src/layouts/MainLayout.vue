@@ -13,11 +13,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useUserStore } from '../stores/user';
 import AppHeader from '../components/ui/AppHeader.vue';
 import AppDrawer from '../components/ui/AppDrawer.vue';
 import AppDialog from '../components/ui/AppDialog.vue';
 
+const { fetchUser } = useUserStore();
 const showTransactionModal = ref(false);
 const drawer = ref(false);
+
+onMounted(() => {
+  fetchUser();
+});
 </script>
