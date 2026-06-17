@@ -28,6 +28,7 @@ api.interceptors.response.use(
     // Generic error handling can be added here
     if (error.response?.status === 401) {
       Cookies.remove('accessToken');
+      window.location.href = '/login';
     }
     return Promise.reject(error);
   }

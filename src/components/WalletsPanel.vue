@@ -57,7 +57,7 @@
             size="sm"
             icon="delete"
             label="Excluir carteira"
-            class="mt-2 w-full"
+            class="mt-2 w-full py-2"
             @click.stop="handleDeleteWallet(wallet.id)"
           />
         </div>

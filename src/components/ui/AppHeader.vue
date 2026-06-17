@@ -20,12 +20,12 @@
           emit-value
           map-options
           options-dense
-          class="bg-white/10 rounded-lg px-2 text-white"
-          popup-content-class="bg-white"
-          dark
+          class="bg-white/10 rounded-lg px-2"
         >
           <template v-slot:selected-item="scope">
-            <span class="text-white text-xs font-medium uppercase">{{ scope.opt.value.split('-')[0] }}</span>
+            <span class="text-white text-xs font-medium uppercase">{{
+              scope.opt.value.split('-')[0]
+            }}</span>
           </template>
         </q-select>
 
@@ -33,10 +33,11 @@
           flat
           round
           icon="add"
+          :disable="!wallets.length"
           @click="$emit('new-transaction')"
           class="hover:bg-primary-700 rounded-full p-2"
         >
-          <q-tooltip>{{ $t('finance.newTransaction') }}</q-tooltip>
+          <q-tooltip>{{ wallets.length ? $t('finance.newTransaction') : $t('finance.noWallets') }}</q-tooltip>
         </q-btn>
       </div>
     </q-toolbar>
@@ -47,9 +48,11 @@
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '../../stores/user';
+import { useFinanceStore } from '../../stores/finance';
 
 const { locale } = useI18n();
 const { userName } = storeToRefs(useUserStore());
+const { wallets } = storeToRefs(useFinanceStore());
 
 const localeOptions = [
   { label: 'English', value: 'en-US' },
