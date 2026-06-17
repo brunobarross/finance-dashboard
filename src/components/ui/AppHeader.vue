@@ -9,8 +9,9 @@
       </q-toolbar-title>
 
       <div class="flex items-center gap-1 sm:gap-2">
-        <div v-if="userName" class="text-white text-sm font-medium mr-2 hidden sm:block">
-          {{ userName }}
+        <div v-if="userName" class="flex items-center text-white mr-1 sm:mr-2">
+          <q-icon name="person" size="18px" class="mr-1 opacity-80" />
+          <span class="text-xs sm:text-sm font-medium">{{ userName }}</span>
         </div>
         <q-select
           v-model="locale"
