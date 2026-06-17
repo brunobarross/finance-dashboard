@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import type { Transaction, Wallet } from '../types';
-import WalletService from '../services/WalletService';
-import TransactionService from '../services/TransactionService';
+import WalletService from '../services/walletService';
+import TransactionService from '../services/transactionService';
 import { WalletDTO } from 'src/types/api';
 
 export function useFinance() {
@@ -15,7 +15,6 @@ export function useFinance() {
     error.value = null;
     try {
       const data = await WalletService.getAll();
-      // Map DTO to Wallet type, adding a default icon if missing
       wallets.value = data.map((w) => ({
         ...w,
         icon: 'account_balance_wallet',
@@ -118,6 +117,7 @@ export function useFinance() {
       const payload = {
         name: wallet.name,
         color: wallet.color,
+        icon: wallet.icon,
         userId: wallet.userId, // This is crucial
       };
       const data = await WalletService.create(payload);

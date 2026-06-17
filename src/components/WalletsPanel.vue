@@ -38,7 +38,7 @@
               class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center"
               :style="{ backgroundColor: wallet.color }"
             >
-              <!-- <q-icon :name="wallet" class="text-white" size="18px sm:20px" /> -->
+              <q-icon :name="wallet.icon" class="text-white" size="18px sm:20px" />
             </div>
           </q-item-section>
 

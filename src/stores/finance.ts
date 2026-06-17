@@ -34,6 +34,7 @@ export const useFinanceStore = defineStore('finance', () => {
   };
 
   const addWallet = async (wallet: Omit<Wallet, 'id' | 'userId'>) => {
+    console.log(wallet);
     if (!userStore.userId) throw new Error('User not authenticated');
     return originalAddWallet({
       ...wallet,

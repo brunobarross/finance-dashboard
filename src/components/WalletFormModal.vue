@@ -1,13 +1,17 @@
 <template>
   <q-card class="w-full max-w-md mx-auto" style="min-width: 280px; max-width: 95vw">
     <q-card-section class="bg-primary-50 q-pa-md sm:q-pa-md">
-      <h3 class="text-base sm:text-lg font-semibold text-gray-800">{{ $t('finance.newWallet') }}</h3>
+      <h3 class="text-base sm:text-lg font-semibold text-gray-800">
+        {{ $t('finance.newWallet') }}
+      </h3>
     </q-card-section>
 
     <q-card-section class="q-pa-md sm:q-pa-md">
       <q-form @submit.prevent="handleSubmit" class="space-y-3 sm:space-y-4">
         <div>
-          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">{{ $t('finance.name') }} *</label>
+          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1"
+            >{{ $t('finance.name') }} *</label
+          >
           <q-input
             v-model="form.name"
             outlined
@@ -19,7 +23,9 @@
         </div>
 
         <div>
-          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">{{ $t('finance.icon') }}</label>
+          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">{{
+            $t('finance.icon')
+          }}</label>
           <q-select
             v-model="form.icon"
             :options="iconOptions"
@@ -32,7 +38,9 @@
         </div>
 
         <div>
-          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">{{ $t('finance.color') }}</label>
+          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">{{
+            $t('finance.color')
+          }}</label>
           <div class="flex flex-wrap gap-2">
             <button
               v-for="color in colorOptions"
@@ -49,8 +57,18 @@
         </div>
 
         <div class="flex justify-end gap-2 pt-2 sm:pt-4">
-          <q-btn flat :label="$t('actions.cancel')" @click="$emit('close')" class="touch-manipulation" />
-          <q-btn color="primary" :label="$t('actions.save')" type="submit" class="touch-manipulation" />
+          <q-btn
+            flat
+            :label="$t('actions.cancel')"
+            @click="$emit('close')"
+            class="touch-manipulation"
+          />
+          <q-btn
+            color="primary"
+            :label="$t('actions.save')"
+            type="submit"
+            class="touch-manipulation"
+          />
         </div>
       </q-form>
     </q-card-section>
