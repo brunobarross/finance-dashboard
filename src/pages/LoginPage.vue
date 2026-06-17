@@ -71,11 +71,13 @@ import { useAuthApi, useApi } from 'src/composables';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import type { LoginResponse } from 'src/types';
+import { useFinanceStore } from 'src/stores/finance';
 
 const { login } = useAuthApi();
 const { loading, error, execute } = useApi<LoginResponse, any[]>(login);
 const $q = useQuasar();
 const router = useRouter();
+const financeStore = useFinanceStore();
 
 const username = ref('');
 const password = ref('');
@@ -88,6 +90,9 @@ const onSubmit = async () => {
     });
 
     if (!response?.accessToken) throw new Error();
+    
+    financeStore.user = response.user;
+    
     Cookies.set('accessToken', response.accessToken, {
       secure: true,
       sameSite: 'strict',

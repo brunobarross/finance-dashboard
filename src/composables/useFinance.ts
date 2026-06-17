@@ -118,7 +118,7 @@ export function useFinance() {
       const payload = {
         name: wallet.name,
         color: wallet.color,
-        userId: wallet.userId,
+        userId: wallet.userId, // This is crucial
       };
       const data = await WalletService.create(payload);
       wallets.value.push({

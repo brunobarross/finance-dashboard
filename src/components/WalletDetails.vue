@@ -23,7 +23,7 @@
           <div
             :class="[
               'w-2 h-2 rounded-full flex-shrink-0',
-              t.type === 'income' ? 'bg-emerald-500' : 'bg-red-500',
+              t.type === 'INCOME' ? 'bg-emerald-500' : 'bg-red-500',
             ]"
           />
           <span class="text-xs sm:text-sm text-gray-700 truncate">{{ t.name }}</span>
@@ -31,10 +31,10 @@
         <span
           :class="[
             'text-xs sm:text-sm font-medium flex-shrink-0 ml-2',
-            t.type === 'income' ? 'text-emerald-600' : 'text-red-600',
+            t.type === 'INCOME' ? 'text-emerald-600' : 'text-red-600',
           ]"
         >
-          {{ t.type === 'income' ? '+' : '-' }}{{ formatCurrency(t.value) }}
+          {{ t.type === 'INCOME' ? '+' : '-' }}{{ formatCurrency(t.value) }}
         </span>
       </div>
     </div>
@@ -49,7 +49,7 @@ interface WalletSummary {
   name: string;
   color: string;
   icon: string;
-  transactions: Array<{ id: string; name: string; value: number; type: 'income' | 'expense' }>;
+  transactions: Array<{ id: string; name: string; value: number; type: 'INCOME' | 'EXPENSE' }>;
 }
 
 defineProps<{ wallet?: WalletSummary }>();

@@ -1,8 +1,13 @@
 import { defineStore } from 'pinia';
 import { useMonthNavigator, useFinance, useTransactionStats } from '../composables';
-import { watch, onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
+import { useUserStore } from './user';
+import type { Transaction, Wallet } from '../types';
 
 export const useFinanceStore = defineStore('finance', () => {
+  const userStore = useUserStore();
+  const user = computed(() => userStore.user);
+
   const { currentMonth, nextMonth, prevMonth, setMonth, monthLabel } = useMonthNavigator();
   const {
     wallets,
@@ -12,28 +17,36 @@ export const useFinanceStore = defineStore('finance', () => {
     fetchWallets,
     fetchTransactions,
     getWalletTransactions,
-    addTransaction,
+    addTransaction: originalAddTransaction,
     deleteTransaction,
-    addWallet,
+    addWallet: originalAddWallet,
     deleteWallet,
   } = useFinance();
 
   const { totalIncome, totalExpenses, balance } = useTransactionStats({ transactions });
 
-  // // Automatically fetch transactions when the month changes
-  // watch(
-  //   currentMonth,
-  //   (newMonth) => {
-  //     fetchTransactions({ month: newMonth.month, year: newMonth.year });
-  //   },
-  //   { deep: true, immediate: true }
-  // );
+  const addTransaction = async (transaction: Omit<Transaction, 'id' | 'userId'>) => {
+    if (!userStore.userId) throw new Error('User not authenticated');
+    return originalAddTransaction({
+      ...transaction,
+      userId: userStore.userId,
+    } as Omit<Transaction, 'id'>);
+  };
+
+  const addWallet = async (wallet: Omit<Wallet, 'id' | 'userId'>) => {
+    if (!userStore.userId) throw new Error('User not authenticated');
+    return originalAddWallet({
+      ...wallet,
+      userId: userStore.userId,
+    } as Omit<Wallet, 'id'>);
+  };
 
   onMounted(() => {
     fetchWallets();
   });
 
   return {
+    user,
     currentMonth,
     monthLabel,
     wallets,

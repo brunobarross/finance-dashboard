@@ -1,4 +1,4 @@
-export type TransactionType = 'expense' | 'income';
+export type TransactionType = 'EXPENSE' | 'INCOME';
 
 export interface Transaction {
   id: string;
@@ -67,18 +67,9 @@ export interface LoginRequest {
   password: string;
 }
 
-export interface Authority {
-  authority: string;
-}
-
 export interface User {
-  password: null;
-  username: string;
-  authorities: Authority[];
-  accountNonExpired: boolean;
-  accountNonLocked: boolean;
-  credentialsNonExpired: boolean;
-  enabled: boolean;
+  id: string;
+  name: string;
 }
 
 export interface LoginResponse {

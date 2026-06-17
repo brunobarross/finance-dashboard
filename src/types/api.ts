@@ -12,7 +12,7 @@ export interface TransactionDTO {
   description: string;
   date: string;
   installment: string;
-  type: 'income' | 'expense';
+  type: 'INCOME' | 'EXPENSE';
   walletId: string;
   userId: string;
 }

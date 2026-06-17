@@ -28,12 +28,12 @@
           <div
             :class="[
               'w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center',
-              transaction.type === 'income' ? 'bg-emerald-100' : 'bg-red-100',
+              transaction.type === 'INCOME' ? 'bg-emerald-100' : 'bg-red-100',
             ]"
           >
             <q-icon
-              :name="transaction.type === 'income' ? 'arrow_downward' : 'arrow_upward'"
-              :class="transaction.type === 'income' ? 'text-emerald-600' : 'text-red-600'"
+              :name="transaction.type === 'INCOME' ? 'arrow_downward' : 'arrow_upward'"
+              :class="transaction.type === 'INCOME' ? 'text-emerald-600' : 'text-red-600'"
               size="18px sm:20px"
             />
           </div>
@@ -55,10 +55,10 @@
           <q-item-label
             :class="[
               'font-semibold text-sm sm:text-base',
-              transaction.type === 'income' ? 'text-emerald-600' : 'text-red-600',
+              transaction.type === 'INCOME' ? 'text-emerald-600' : 'text-red-600',
             ]"
           >
-            {{ transaction.type === 'income' ? '+' : '-' }}{{ formatCurrency(transaction.value) }}
+            {{ transaction.type === 'INCOME' ? '+' : '-' }}{{ formatCurrency(transaction.value) }}
           </q-item-label>
           <q-item-label caption class="text-gray-400 text-xs">
             {{ transaction.installment }}

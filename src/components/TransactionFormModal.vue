@@ -81,15 +81,15 @@
             v-model="form.type"
             toggle-color="primary"
             :options="[
-              { label: $t('finance.expense'), value: 'expense' },
-              { label: $t('finance.incomeType'), value: 'income' },
+              { label: $t('finance.expense'), value: 'EXPENSE' },
+              { label: $t('finance.incomeType'), value: 'INCOME' },
             ]"
             class="w-full"
             rounded
             unelevated
             color="white"
             text-color="grey-8"
-            :toggle-text-color="form.type === 'expense' ? 'white' : 'white'"
+            :toggle-text-color="form.type === 'EXPENSE' ? 'white' : 'white'"
           />
         </div>
 
@@ -121,7 +121,7 @@ const form = ref({
   installment: '-',
   walletId: '',
   description: '',
-  type: 'expense' as 'expense' | 'income',
+  type: 'EXPENSE' as 'EXPENSE' | 'INCOME',
   date: new Date().toISOString().split('T')[0],
 });
 

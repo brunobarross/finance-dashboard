@@ -59,8 +59,8 @@ export function useTransactionStats(
 ): UseTransactionStatsReturn {
   const { transactions } = options;
 
-  const expenses = computed(() => transactions.value.filter((t) => t.type === 'expense'));
-  const incomes = computed(() => transactions.value.filter((t) => t.type === 'income'));
+  const expenses = computed(() => transactions.value.filter((t) => t.type === 'EXPENSE'));
+  const incomes = computed(() => transactions.value.filter((t) => t.type === 'INCOME'));
 
   const totalExpenses = computed(() => expenses.value.reduce((sum, t) => sum + t.value, 0));
 
@@ -116,10 +116,10 @@ export function useWalletStats(walletId: string, transactions: Ref<Transaction[]
   );
 
   const walletExpenses = computed(() =>
-    walletTransactions.value.filter((t) => t.type === 'expense')
+    walletTransactions.value.filter((t) => t.type === 'EXPENSE')
   );
 
-  const walletIncomes = computed(() => walletTransactions.value.filter((t) => t.type === 'income'));
+  const walletIncomes = computed(() => walletTransactions.value.filter((t) => t.type === 'INCOME'));
 
   const walletTotalExpenses = computed(() =>
     walletExpenses.value.reduce((sum, t) => sum + t.value, 0)
