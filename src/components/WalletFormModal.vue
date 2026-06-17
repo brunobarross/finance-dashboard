@@ -94,7 +94,9 @@ const colorOptions = [
 ];
 
 const handleSubmit = () => {
-  addWallet(form.value);
+  addWallet({
+    ...form.value,
+  });
   $q.notify({ type: 'positive', message: t('actions.walletCreated'), position: 'top' });
   emit('close');
 };

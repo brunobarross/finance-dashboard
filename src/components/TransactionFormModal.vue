@@ -128,7 +128,9 @@ const form = ref({
 const walletOptions = computed(() => wallets.value.map((w) => ({ label: w.name, value: w.id })));
 
 const handleSubmit = () => {
-  addTransaction(form.value);
+  addTransaction({
+    ...form.value,
+  });
   $q.notify({ type: 'positive', message: t('actions.transactionAdded'), position: 'top' });
   emit('close');
 };
