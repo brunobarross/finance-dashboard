@@ -9,6 +9,9 @@
       </q-toolbar-title>
 
       <div class="flex items-center gap-1 sm:gap-2">
+        <div v-if="userName" class="text-white text-sm font-medium mr-2 hidden sm:block">
+          {{ userName }}
+        </div>
         <q-select
           v-model="locale"
           :options="localeOptions"
@@ -42,8 +45,11 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
+import { storeToRefs } from 'pinia';
+import { useUserStore } from '../../stores/user';
 
 const { locale } = useI18n();
+const { userName } = storeToRefs(useUserStore());
 
 const localeOptions = [
   { label: 'English', value: 'en-US' },
