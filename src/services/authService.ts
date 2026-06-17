@@ -1,9 +1,14 @@
-import { apiClient } from './apiClient';
-import type { LoginRequest, LoginResponse } from '../types';
+import api from '../api/axios';
+import type { LoginRequest, LoginResponse, User } from '../types';
 
 export const authService = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
-    const response = await apiClient.instance.post<LoginResponse>('/authenticate', credentials);
+    const response = await api.post<LoginResponse>('/authenticate', credentials);
+    return response.data;
+  },
+
+  getMe: async (): Promise<User> => {
+    const response = await api.get<User>('/user/me');
     return response.data;
   },
 };
