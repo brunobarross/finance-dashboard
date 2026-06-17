@@ -1,52 +1,78 @@
 <template>
-  <q-page class="flex flex-center bg-gray-100">
-    <q-card class="w-full max-w-md shadow-lg rounded-xl overflow-hidden">
-      <q-card-section class="bg-primary text-white py-6 text-center">
-        <div class="text-h5 font-bold uppercase tracking-wider">{{ $t('auth.welcome') }}</div>
-        <div class="text-subtitle2 opacity-80">{{ $t('auth.subtitle') }}</div>
+  <q-page class="flex flex-center bg-gradient-to-br from-gray-100 to-gray-200 p-4">
+    <q-card class="w-full max-w-md shadow-2xl rounded-2xl overflow-hidden transition-all duration-500">
+      <q-card-section class="bg-gradient-to-r from-primary-600 to-primary-800 text-white py-8 text-center relative">
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+          <q-icon name="account_balance_wallet" size="150px" class="absolute -top-10 -right-10 rotate-12" />
+        </div>
+        <div class="text-h4 font-bold tracking-tight mb-1">{{ $t('auth.welcome') }}</div>
+        <div class="text-subtitle1 opacity-90">{{ $t('auth.subtitle') }}</div>
       </q-card-section>
 
-      <q-card-section class="p-6 sm:p-8">
-        <q-form @submit.prevent="onSubmit" class="space-y-6">
-          <q-input
-            v-model="username"
-            :label="$t('auth.username')"
-            outlined
-            bg-color="white"
-            lazy-rules
-            :rules="[(val) => (val && val.length > 0) || $t('auth.usernameRequired')]"
-            :disable="loading"
-          >
-            <template v-slot:prepend>
-              <q-icon name="person" class="text-gray-400" />
-            </template>
-          </q-input>
+      <q-card-section class="p-6 sm:p-10 bg-white">
+        <q-form @submit.prevent="onSubmit" class="space-y-5">
+          <div class="space-y-1">
+            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">
+              {{ $t('auth.username') }}
+            </label>
+            <q-input
+              v-model="username"
+              outlined
+              dense
+              bg-color="gray-50"
+              color="primary"
+              lazy-rules
+              :rules="[(val) => (val && val.length > 0) || $t('auth.usernameRequired')]"
+              :disable="loading"
+              class="rounded-lg transition-shadow hover:shadow-sm"
+            >
+              <template v-slot:prepend>
+                <q-icon name="person" class="text-primary-400" size="20px" />
+              </template>
+            </q-input>
+          </div>
 
-          <q-input
-            v-model="password"
-            :label="$t('auth.password')"
-            type="password"
-            outlined
-            bg-color="white"
-            lazy-rules
-            :rules="[(val) => (val && val.length > 0) || $t('auth.passwordRequired')]"
-            :disable="loading"
-          >
-            <template v-slot:prepend>
-              <q-icon name="lock" class="text-gray-400" />
-            </template>
-          </q-input>
+          <div class="space-y-1">
+            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">
+              {{ $t('auth.password') }}
+            </label>
+            <q-input
+              v-model="password"
+              :type="isPasswordVisible ? 'text' : 'password'"
+              outlined
+              dense
+              bg-color="gray-50"
+              color="primary"
+              lazy-rules
+              :rules="[(val) => (val && val.length > 0) || $t('auth.passwordRequired')]"
+              :disable="loading"
+              class="rounded-lg transition-shadow hover:shadow-sm"
+            >
+              <template v-slot:prepend>
+                <q-icon name="lock" class="text-primary-400" size="20px" />
+              </template>
+              <template v-slot:append>
+                <q-icon
+                  :name="isPasswordVisible ? 'visibility_off' : 'visibility'"
+                  class="cursor-pointer text-gray-400 hover:text-primary transition-colors"
+                  @click="isPasswordVisible = !isPasswordVisible"
+                  size="20px"
+                />
+              </template>
+            </q-input>
+          </div>
 
-          <div v-if="error" class="text-red-600 text-sm text-center font-medium">
+          <div v-if="error" class="bg-red-50 border border-red-100 text-red-600 text-sm p-3 rounded-lg text-center font-medium animate-shake">
             {{ error }}
           </div>
 
-          <div class="pt-2">
+          <div class="pt-4">
             <q-btn
               :label="$t('auth.signIn')"
               type="submit"
               color="primary"
-              class="w-full py-3 font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+              unelevated
+              class="w-full py-3 font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform active:scale-95"
               size="lg"
               :loading="loading"
             />
@@ -54,10 +80,12 @@
         </q-form>
       </q-card-section>
 
-      <q-card-section class="text-center pb-6">
+      <q-card-section class="text-center pb-8 bg-white">
         <div class="text-gray-500 text-sm">
           {{ $t('auth.noAccount') }}
-          <a href="#" class="text-primary font-semibold hover:underline">{{ $t('auth.signUp') }}</a>
+          <button class="text-primary font-bold hover:underline bg-transparent border-none p-0 cursor-pointer transition-colors">
+            {{ $t('auth.signUp') }}
+          </button>
         </div>
       </q-card-section>
     </q-card>
@@ -81,6 +109,7 @@ const financeStore = useFinanceStore();
 
 const username = ref('');
 const password = ref('');
+const isPasswordVisible = ref(false);
 
 const onSubmit = async () => {
   try {
@@ -104,13 +133,29 @@ const onSubmit = async () => {
       type: 'negative',
       message: error.value || 'Erro ao realizar login',
       position: 'top',
+      classes: 'rounded-xl shadow-lg'
     });
   }
 };
 </script>
 
 <style scoped>
-.q-card {
-  border: none;
+.animate-shake {
+  animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+:deep(.q-field--outlined .q-field__control) {
+  border-radius: 12px;
+}
+
+:deep(.q-field--outlined.q-field--focused .q-field__control) {
+  box-shadow: 0 0 0 2px rgba(var(--q-primary), 0.1);
 }
 </style>
