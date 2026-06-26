@@ -8,7 +8,7 @@ export const authService = {
   },
 
   getMe: async (): Promise<User> => {
-    const response = await api.get<User>('/user/me');
+    const response = await api.get<User>('/users/me');
     return response.data;
   },
 };

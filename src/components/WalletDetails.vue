@@ -14,45 +14,27 @@
     </div>
 
     <div v-else class="space-y-1 sm:space-y-2">
-      <div
-        v-for="t in wallet.transactions"
-        :key="t.id"
-        class="flex items-center justify-between py-2 sm:py-2.5 px-2 sm:px-3 bg-gray-50 rounded-lg"
-      >
-        <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-          <div
-            :class="[
-              'w-2 h-2 rounded-full flex-shrink-0',
-              t.type === 'INCOME' ? 'bg-emerald-500' : 'bg-red-500',
-            ]"
-          />
-          <span class="text-xs sm:text-sm text-gray-700 truncate">{{ t.name }}</span>
-        </div>
-        <span
-          :class="[
-            'text-xs sm:text-sm font-medium flex-shrink-0 ml-2',
-            t.type === 'INCOME' ? 'text-emerald-600' : 'text-red-600',
-          ]"
-        >
-          {{ t.type === 'INCOME' ? '+' : '-' }}{{ formatCurrency(t.value) }}
-        </span>
-      </div>
+      <WalletDetailsTransactionItem
+        v-for="transaction in wallet.transactions"
+        :key="transaction.id"
+        :transaction="transaction"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useFormatters } from '../composables';
+import WalletDetailsTransactionItem from './WalletDetailsTransactionItem.vue';
+
+import { Transaction } from 'src/types';
 
 interface WalletSummary {
   id: string;
   name: string;
   color: string;
   icon: string;
-  transactions: Array<{ id: string; name: string; value: number; type: 'INCOME' | 'EXPENSE' }>;
+  transactions: Transaction[];
 }
 
 defineProps<{ wallet?: WalletSummary }>();
-
-const { formatCurrency } = useFormatters();
 </script>

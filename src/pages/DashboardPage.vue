@@ -11,6 +11,5 @@
 <script setup lang="ts">
 import MonthSelector from '../components/MonthSelector.vue';
 import SummaryCards from '../components/SummaryCards.vue';
-import TransactionsList from '../components/TransactionsList.vue';
 import WalletsPanel from '../components/WalletsPanel.vue';
 </script>
