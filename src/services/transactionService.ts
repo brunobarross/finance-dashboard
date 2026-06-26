@@ -14,7 +14,7 @@ class TransactionService {
         params.append('month', monthStr);
       }
       if (filters?.year) params.append('year', filters.year.toString());
-      if (filters?.wallet) params.append('wallet', filters.wallet);
+      if (filters?.wallet) params.append('walletId', filters.wallet);
 
       const queryString = params.toString();
       const url = `/transactions${queryString ? `?${queryString}` : ''}`;

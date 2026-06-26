@@ -1,13 +1,17 @@
 <template>
   <q-card class="w-full max-w-md mx-auto" style="min-width: 280px; max-width: 95vw">
     <q-card-section class="bg-primary-50 q-pa-md sm:q-pa-md">
-      <h3 class="text-base sm:text-lg font-semibold text-gray-800">{{ $t('finance.newTransaction') }}</h3>
+      <h3 class="text-base sm:text-lg font-semibold text-gray-800">
+        {{ $t('finance.newTransaction') }}
+      </h3>
     </q-card-section>
 
     <q-card-section class="q-pa-md sm:q-pa-md h-full">
       <q-form @submit.prevent="handleSubmit" class="space-y-3 sm:space-y-4 flex flex-col">
         <div>
-          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">{{ $t('finance.name') }} *</label>
+          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1"
+            >{{ $t('finance.name') }} *</label
+          >
           <q-input
             v-model="form.name"
             outlined
@@ -35,7 +39,9 @@
           </div>
 
           <div>
-            <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">{{ $t('finance.installment') }}</label>
+            <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">{{
+              $t('finance.installment')
+            }}</label>
             <q-input
               v-model="form.installment"
               outlined
@@ -44,6 +50,25 @@
               class="w-full"
             />
           </div>
+        </div>
+
+        <div>
+          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">{{
+            $t('finance.date')
+          }}</label>
+          <q-input outlined dense v-model="form.date" mask="date" :rules="['date']">
+            <template v-slot:append>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                  <q-date v-model="form.date">
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Close" color="primary" flat />
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
         </div>
 
         <div>
@@ -63,7 +88,9 @@
         </div>
 
         <div>
-          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">{{ $t('finance.description') }}</label>
+          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">{{
+            $t('finance.description')
+          }}</label>
           <q-input
             v-model="form.description"
             outlined
@@ -76,7 +103,9 @@
         </div>
 
         <div>
-          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">{{ $t('finance.type') }}</label>
+          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">{{
+            $t('finance.type')
+          }}</label>
           <q-btn-toggle
             v-model="form.type"
             toggle-color="primary"
@@ -94,8 +123,18 @@
         </div>
 
         <div class="flex justify-end gap-2 pt-2 sm:pt-4 mt-auto">
-          <q-btn flat :label="$t('actions.cancel')" @click="$emit('close')" class="touch-manipulation" />
-          <q-btn color="primary" :label="$t('actions.save')" type="submit" class="touch-manipulation" />
+          <q-btn
+            flat
+            :label="$t('actions.cancel')"
+            @click="$emit('close')"
+            class="touch-manipulation"
+          />
+          <q-btn
+            color="primary"
+            :label="$t('actions.save')"
+            type="submit"
+            class="touch-manipulation"
+          />
         </div>
       </q-form>
     </q-card-section>
@@ -106,7 +145,7 @@
 import { ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useFinanceStore } from '../stores/finance';
-import { useQuasar } from 'quasar';
+import { useQuasar, date } from 'quasar';
 import { useI18n } from 'vue-i18n';
 
 const emit = defineEmits<{ close: [] }>();
@@ -118,11 +157,11 @@ const { t } = useI18n();
 const form = ref({
   name: '',
   value: 0,
-  installment: '-',
+  installment: '',
   walletId: '',
   description: '',
-  type: 'EXPENSE' as 'EXPENSE' | 'INCOME',
   date: new Date().toISOString().split('T')[0],
+  type: 'EXPENSE' as 'EXPENSE' | 'INCOME',
 });
 
 const walletOptions = computed(() => wallets.value.map((w) => ({ label: w.name, value: w.id })));
@@ -130,6 +169,7 @@ const walletOptions = computed(() => wallets.value.map((w) => ({ label: w.name, 
 const handleSubmit = () => {
   addTransaction({
     ...form.value,
+    date: date.formatDate(form.value.date, 'YYYY-MM-DD'),
   });
   $q.notify({ type: 'positive', message: t('actions.transactionAdded'), position: 'top' });
   emit('close');

@@ -4,12 +4,14 @@
       <span class="text-xs sm:text-sm font-medium text-gray-600">{{
         $t('finance.walletTransactions')
       }}</span>
-      <span class="text-xs text-gray-400"
+      <span v-if="!wallet?.isLoading" class="text-xs text-gray-400"
         >{{ wallet?.transactions.length }} {{ $t('finance.records') }}</span
       >
     </div>
 
-    <div v-if="!wallet?.transactions.length" class="text-center py-3 sm:py-4">
+    <SkeletonLoader v-if="wallet?.isLoading" type="transaction-list" />
+
+    <div v-else-if="!wallet?.transactions.length" class="text-center py-3 sm:py-4">
       <p class="text-gray-400 text-xs sm:text-sm">{{ $t('finance.noTransactionsMonth') }}</p>
     </div>
 
@@ -18,6 +20,7 @@
         v-for="transaction in wallet.transactions"
         :key="transaction.id"
         :transaction="transaction"
+        @delete="$emit('delete-transaction', $event)"
       />
     </div>
   </div>
@@ -25,6 +28,7 @@
 
 <script setup lang="ts">
 import WalletDetailsTransactionItem from './WalletDetailsTransactionItem.vue';
+import SkeletonLoader from './SkeletonLoader.vue';
 
 import { Transaction } from 'src/types';
 
@@ -34,7 +38,9 @@ interface WalletSummary {
   color: string;
   icon: string;
   transactions: Transaction[];
+  isLoading: boolean;
 }
 
 defineProps<{ wallet?: WalletSummary }>();
+defineEmits<{ (e: 'delete-transaction', id: string): void }>();
 </script>

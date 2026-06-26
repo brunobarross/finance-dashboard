@@ -30,6 +30,7 @@ export default {
     name: 'Nome',
     value: 'Valor',
     installment: 'Parcela',
+    date: 'Data da transação',
     wallet: 'Carteira/Cartão',
     description: 'Descrição',
     type: 'Tipo',
@@ -81,5 +82,6 @@ export default {
   errors: {
     notFound: 'Página não encontrada',
     goBack: 'Voltar ao Início',
+    generic: 'Ocorreu um erro. Tente novamente.',
   },
 };
