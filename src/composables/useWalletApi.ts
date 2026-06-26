@@ -1,4 +1,4 @@
-import WalletService from '../services/WalletService';
+import WalletService from '../services/walletService';
 import { WalletDTO } from '../types/api';
 
 export function useWalletApi() {
