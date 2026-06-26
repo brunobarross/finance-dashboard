@@ -160,7 +160,7 @@ const form = ref({
   installment: '',
   walletId: '',
   description: '',
-  date: new Date().toISOString().split('T')[0],
+  date: '',
   type: 'EXPENSE' as 'EXPENSE' | 'INCOME',
 });
 
