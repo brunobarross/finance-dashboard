@@ -27,12 +27,16 @@
             <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1"
               >{{ $t('finance.value') }} (R$) *</label
             >
+
             <q-input
-              v-model.number="form.value"
-              type="number"
+              v-model="form.value"
+              type="text"
+              mask="#.##"
+              fill-mask="0"
+              reverse-fill-mask
               outlined
               dense
-              prefix="R$"
+              prefix="R$ "
               class="w-full"
               :rules="[(val) => val > 0 || $t('actions.requiredValue')]"
             />
@@ -44,6 +48,7 @@
             }}</label>
             <q-input
               v-model="form.installment"
+              mask="##/##"
               outlined
               dense
               :placeholder="$t('actions.installmentPlaceholder')"
@@ -53,9 +58,9 @@
         </div>
 
         <div>
-          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">{{
-            $t('finance.date')
-          }}</label>
+          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1"
+            >{{ $t('finance.date') }} *</label
+          >
           <q-input outlined dense v-model="form.date" mask="date" :rules="['date']">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
