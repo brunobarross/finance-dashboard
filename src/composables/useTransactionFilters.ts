@@ -44,7 +44,7 @@ interface UseTransactionStatsOptions {
 }
 
 interface UseTransactionStatsReturn {
-  totalIncome: ComputedRef<number>;
+  totalReceipts: ComputedRef<number>;
   totalExpenses: ComputedRef<number>;
   balance: ComputedRef<number>;
   expensesByType: ComputedRef<Map<string, number>>;
@@ -64,9 +64,9 @@ export function useTransactionStats(
 
   const totalExpenses = computed(() => expenses.value.reduce((sum, t) => sum + t.value, 0));
 
-  const totalIncome = computed(() => incomes.value.reduce((sum, t) => sum + t.value, 0));
+  const totalReceipts = computed(() => incomes.value.reduce((sum, t) => sum + t.value, 0));
 
-  const balance = computed(() => totalIncome.value - totalExpenses.value);
+  const balance = computed(() => totalReceipts.value - totalExpenses.value);
 
   const expensesByType = computed(() => {
     const map = new Map<string, number>();
@@ -95,11 +95,11 @@ export function useTransactionStats(
 
   const averageIncome = computed(() => {
     if (incomes.value.length === 0) return 0;
-    return totalIncome.value / incomes.value.length;
+    return totalReceipts.value / incomes.value.length;
   });
 
   return {
-    totalIncome,
+    totalReceipts,
     totalExpenses,
     balance,
     expensesByType,
@@ -125,18 +125,18 @@ export function useWalletStats(walletId: string, transactions: Ref<Transaction[]
     walletExpenses.value.reduce((sum, t) => sum + t.value, 0)
   );
 
-  const walletTotalIncome = computed(() =>
+  const wallettotalReceipts = computed(() =>
     walletIncomes.value.reduce((sum, t) => sum + t.value, 0)
   );
 
-  const walletBalance = computed(() => walletTotalIncome.value - walletTotalExpenses.value);
+  const walletBalance = computed(() => wallettotalReceipts.value - walletTotalExpenses.value);
 
   return {
     walletTransactions,
     walletExpenses,
     walletIncomes,
     walletTotalExpenses,
-    walletTotalIncome,
+    wallettotalReceipts,
     walletBalance,
   };
 }

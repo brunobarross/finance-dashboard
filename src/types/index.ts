@@ -31,10 +31,9 @@ export interface WalletSummary extends Wallet {
 }
 
 export interface FinanceSummary {
-  totalIncome: number;
+  totalReceipts: number;
   totalExpenses: number;
-  balance: number;
-  transactionCount: number;
+  currentBalance: number;
 }
 
 export interface TransactionFilters {

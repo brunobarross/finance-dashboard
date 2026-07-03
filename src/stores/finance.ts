@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
-import { useMonthNavigator, useFinance, useTransactionStats } from '../composables';
-import { onMounted, computed } from 'vue';
+import { useMonthNavigator, useFinance } from '../composables';
+import { onMounted, computed, watch } from 'vue';
 import { useUserStore } from './user';
 import type { Transaction, Wallet } from '../types';
 
@@ -12,25 +12,37 @@ export const useFinanceStore = defineStore('finance', () => {
   const {
     wallets,
     transactions,
+    summary,
     isLoading,
     error,
+    fetchDashboardSummary,
     fetchWallets,
     fetchTransactions,
     getWalletTransactions,
     addTransaction: originalAddTransaction,
-    deleteTransaction,
+    deleteTransaction: originalDeleteTransaction,
     addWallet: originalAddWallet,
-    deleteWallet,
+    deleteWallet: originalDeleteWallet,
   } = useFinance();
 
-  const { totalIncome, totalExpenses, balance } = useTransactionStats({ transactions });
+  const totalReceipts = computed(() => summary.value.totalReceipts);
+  const totalExpenses = computed(() => summary.value.totalExpenses);
+  const currentBalance = computed(() => summary.value.currentBalance);
+
+  const refreshDashboardSummary = async () => {
+    await fetchDashboardSummary({
+      month: currentMonth.value.month,
+      year: currentMonth.value.year,
+    });
+  };
 
   const addTransaction = async (transaction: Omit<Transaction, 'id' | 'userId'>) => {
     if (!userStore.userId) throw new Error('User not authenticated');
-    return originalAddTransaction({
+    await originalAddTransaction({
       ...transaction,
       userId: userStore.userId,
     } as Omit<Transaction, 'id'>);
+    await refreshDashboardSummary();
   };
 
   const addWallet = async (wallet: Omit<Wallet, 'id' | 'userId'>) => {
@@ -42,9 +54,28 @@ export const useFinanceStore = defineStore('finance', () => {
     } as Omit<Wallet, 'id'>);
   };
 
+  const deleteTransaction = async (id: string) => {
+    await originalDeleteTransaction(id);
+    await refreshDashboardSummary();
+  };
+
+  const deleteWallet = async (id: string) => {
+    await originalDeleteWallet(id);
+    await refreshDashboardSummary();
+  };
+
   onMounted(() => {
     fetchWallets();
+    refreshDashboardSummary();
   });
+
+  watch(
+    currentMonth,
+    () => {
+      refreshDashboardSummary();
+    },
+    { deep: true }
+  );
 
   return {
     user,
@@ -52,14 +83,16 @@ export const useFinanceStore = defineStore('finance', () => {
     monthLabel,
     wallets,
     transactions,
+    summary,
     isLoading,
     error,
-    totalIncome,
+    totalReceipts,
     totalExpenses,
-    balance,
+    currentBalance,
     nextMonth,
     prevMonth,
     setMonth,
+    fetchDashboardSummary,
     fetchWallets,
     fetchTransactions,
     getWalletTransactions,

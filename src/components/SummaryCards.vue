@@ -5,7 +5,7 @@
         <div class="min-w-0 flex-1">
           <p class="text-xs sm:text-sm text-gray-500 font-medium truncate">{{ $t('finance.income') }}</p>
           <p class="text-lg sm:text-2xl font-bold text-emerald-600 mt-1">
-            {{ formatCurrency(totalIncome) }}
+            {{ formatCurrency(totalReceipts) }}
           </p>
         </div>
         <div
@@ -44,7 +44,7 @@
               balance >= 0 ? 'text-primary-600' : 'text-red-600',
             ]"
           >
-            {{ formatCurrency(balance) }}
+            {{ formatCurrency(currentBalance) }}
           </p>
         </div>
         <div
@@ -62,6 +62,6 @@ import { storeToRefs } from 'pinia';
 import { useFinanceStore } from '../stores/finance';
 import { useFormatters } from '../composables';
 
-const { totalExpenses, totalIncome, balance } = storeToRefs(useFinanceStore());
+const { totalExpenses, totalReceipts, currentBalance } = storeToRefs(useFinanceStore());
 const { formatCurrency } = useFormatters();
 </script>

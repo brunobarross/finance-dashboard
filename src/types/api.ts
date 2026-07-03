@@ -17,3 +17,9 @@ export interface TransactionDTO {
   walletId: string;
   userId: string;
 }
+
+export interface FinanceDashboardDTO {
+  totalReceipts: number;
+  totalExpenses: number;
+  currentBalance: number;
+}

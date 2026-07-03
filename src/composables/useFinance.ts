@@ -1,14 +1,43 @@
 import { ref } from 'vue';
-import type { Transaction, Wallet } from '../types';
+import type { FinanceSummary, Transaction, Wallet } from '../types';
 import WalletService from '../services/walletService';
 import TransactionService from '../services/transactionService';
-import { WalletDTO } from 'src/types/api';
+import FinanceDashboardService from '../services/financeDashboardService';
+import type { WalletDTO } from 'src/types/api';
 
 export function useFinance() {
   const wallets = ref<WalletDTO[]>([]);
   const transactions = ref<Transaction[]>([]);
+  const summary = ref<FinanceSummary>({
+    totalReceipts: 0,
+    totalExpenses: 0,
+    currentBalance: 0
+  });
   const isLoading = ref(false);
   const error = ref<string | null>(null);
+
+  const fetchDashboardSummary = async (filters?: {
+    month?: number;
+    year?: number;
+  }) => {
+    isLoading.value = true;
+    error.value = null;
+    try {
+      const data = await FinanceDashboardService.getSummary(filters);
+      summary.value = {
+        totalReceipts: data.totalReceipts,
+        totalExpenses: data.totalExpenses,
+        currentBalance: data.currentBalance,
+      };
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to fetch finance dashboard summary';
+      error.value = errorMessage;
+      console.error(err);
+    } finally {
+      isLoading.value = false;
+    }
+  };
 
   const fetchWallets = async () => {
     isLoading.value = true;
@@ -155,8 +184,10 @@ export function useFinance() {
   return {
     wallets,
     transactions,
+    summary,
     isLoading,
     error,
+    fetchDashboardSummary,
     fetchWallets,
     fetchTransactions,
     getWalletTransactions,
