@@ -11,15 +11,12 @@ export function useFinance() {
   const summary = ref<FinanceSummary>({
     totalReceipts: 0,
     totalExpenses: 0,
-    currentBalance: 0
+    currentBalance: 0,
   });
   const isLoading = ref(false);
   const error = ref<string | null>(null);
 
-  const fetchDashboardSummary = async (filters?: {
-    month?: number;
-    year?: number;
-  }) => {
+  const fetchDashboardSummary = async (filters?: { month?: number; year?: number }) => {
     isLoading.value = true;
     error.value = null;
     try {
@@ -103,7 +100,7 @@ export function useFinance() {
       // Create TransactionDTO payload (remove extra fields if any)
       const payload = {
         name: transaction.name,
-        value: transaction.value,
+        value: Number(transaction.value),
         description: transaction.description,
         date: transaction.date,
         installment: transaction.installment,
