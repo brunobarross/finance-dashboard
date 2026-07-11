@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import type { FinanceSummary, Transaction, Wallet } from '../types';
 import WalletService from '../services/walletService';
 import TransactionService from '../services/transactionService';
@@ -15,6 +15,10 @@ export function useFinance() {
   });
   const isLoading = ref(false);
   const error = ref<string | null>(null);
+
+  const balanceColor = computed(() => {
+    return summary.value.currentBalance >= 0 ? 'text-green-600' : 'text-red-600';
+  });
 
   const fetchDashboardSummary = async (filters?: { month?: number; year?: number }) => {
     isLoading.value = true;
@@ -100,7 +104,7 @@ export function useFinance() {
       // Create TransactionDTO payload (remove extra fields if any)
       const payload = {
         name: transaction.name,
-        value: Number(transaction.value),
+        value: transaction.value,
         description: transaction.description,
         date: transaction.date,
         installment: transaction.installment,
@@ -183,6 +187,7 @@ export function useFinance() {
     transactions,
     summary,
     isLoading,
+    balanceColor,
     error,
     fetchDashboardSummary,
     fetchWallets,
