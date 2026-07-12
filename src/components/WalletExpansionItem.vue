@@ -2,12 +2,12 @@
   <q-expansion-item
     group="wallets"
     :header-class="[
-      'py-3 sm:py-4 px-3 sm:px-5 hover:bg-gray-50 transition-colors',
-      isSelected ? 'bg-gray-50' : '',
+      'py-3 sm:py-4 px-3 sm:px-5 app-interactive-muted',
+      isSelected ? 'bg-app-surface-muted' : '',
     ]"
     @show="$emit('show', wallet.id)"
     @hide="$emit('hide')"
-    expand-icon-class="text-gray-400"
+    expand-icon-class="text-app-text-muted"
   >
     <template v-slot:header>
       <q-item-section avatar class="min-w-0">
@@ -20,13 +20,21 @@
       </q-item-section>
 
       <q-item-section class="min-w-0">
-        <q-item-label class="font-medium text-gray-800 text-sm sm:text-base truncate">
+        <q-item-label class="font-medium text-app-text text-sm sm:text-base truncate">
           {{ wallet.name }}
+        </q-item-label>
+        <q-item-label
+          :class="[
+            'text-xs sm:text-sm font-semibold mt-1',
+            wallet.amount >= 0 ? 'text-emerald-600' : 'text-red-600',
+          ]"
+        >
+          {{ formatCurrency(wallet.amount) }}
         </q-item-label>
       </q-item-section>
     </template>
 
-    <div class="bg-gray-50 p-3 sm:p-4 mx-3 sm:mx-4 mb-3 sm:mb-4 rounded-lg">
+    <div class="app-surface-muted p-3 sm:p-4 mx-3 sm:mx-4 mb-3 sm:mb-4 rounded-lg">
       <WalletDetails :wallet="details" @delete-transaction="$emit('delete-transaction', $event)" />
       <q-btn
         flat
@@ -45,6 +53,7 @@
 import { WalletDTO } from 'src/types/api';
 import WalletDetails from './WalletDetails.vue';
 import { Transaction } from 'src/types';
+import { useFormatters } from 'src/composables';
 
 interface WalletSummary {
   id: string;
@@ -55,11 +64,13 @@ interface WalletSummary {
   isLoading: boolean;
 }
 
-defineProps<{
+const props = defineProps<{
   wallet: WalletDTO;
   isSelected: boolean;
   details?: WalletSummary;
 }>();
+
+const { formatCurrency } = useFormatters();
 
 defineEmits<{
   (e: 'show', id: string): void;

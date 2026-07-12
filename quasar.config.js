@@ -1,8 +1,6 @@
 import { defineConfig } from '#q-app/wrappers';
 
-export default defineConfig((ctx) => {
-  console.log(ctx);
-
+export default defineConfig(() => {
   return {
     boot: ['axios', 'i18n'],
     css: ['app.css'],
@@ -18,7 +16,18 @@ export default defineConfig((ctx) => {
       open: false,
     },
     framework: {
-      config: {},
+      config: {
+        brand: {
+          primary: '#2563eb',
+          secondary: '#475569',
+          accent: '#38bdf8',
+          positive: '#059669',
+          negative: '#dc2626',
+          info: '#0ea5e9',
+          warning: '#f59e0b',
+          dark: '#0f172a',
+        },
+      },
       plugins: ['Notify', 'Dialog'],
     },
     animations: [],

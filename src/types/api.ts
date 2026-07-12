@@ -4,6 +4,7 @@ export interface WalletDTO {
   icon: string;
   color: string;
   userId: string;
+  amount: number;
 }
 
 export interface TransactionDTO {

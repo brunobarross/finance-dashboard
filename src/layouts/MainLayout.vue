@@ -1,10 +1,10 @@
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHh lpR fFf" class="app-page">
     <AppHeader @toggle-drawer="drawer = !drawer" @new-transaction="showTransactionModal = true" />
 
     <AppDrawer v-model="drawer" />
 
-    <q-page-container>
+    <q-page-container class="bg-app-bg text-app-text transition-colors duration-300">
       <router-view />
     </q-page-container>
 

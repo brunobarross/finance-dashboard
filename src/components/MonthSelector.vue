@@ -1,24 +1,28 @@
 <template>
   <div
-    class="flex items-center justify-between bg-white rounded-xl shadow-sm px-3 sm:px-6 py-3 sm:py-4"
+    class="app-surface flex items-center justify-between rounded-xl px-3 sm:px-6 py-3 sm:py-4"
   >
-    <button
+    <q-btn
+      flat
+      round
+      dense
+      icon="chevron_left"
       @click="prevMonth"
-      class="p-2 w-10 h-10 hover:bg-gray-100 rounded-full transition-colors touch-manipulation grid place-items-center border-none"
-    >
-      <q-icon name="chevron_left" size="20px sm:24px" />
-    </button>
+      class="app-interactive-muted w-10 h-10 touch-manipulation"
+    />
 
-    <h2 class="text-base sm:text-lg font-semibold text-gray-800 min-w-36 sm:min-w-48 text-center">
+    <h2 class="text-base sm:text-lg font-semibold text-app-text min-w-36 sm:min-w-48 text-center">
       {{ monthLabel }}
     </h2>
 
-    <button
+    <q-btn
+      flat
+      round
+      dense
+      icon="chevron_right"
       @click="nextMonth"
-      class="p-2 w-10 h-10 grid place-items-center hover:bg-gray-100 rounded-full transition-colors touch-manipulation border-none"
-    >
-      <q-icon name="chevron_right" size="20px sm:24px" />
-    </button>
+      class="app-interactive-muted w-10 h-10 touch-manipulation"
+    />
   </div>
 </template>
 

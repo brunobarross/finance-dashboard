@@ -1,24 +1,24 @@
 <template>
-  <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+  <div class="app-surface rounded-xl overflow-hidden">
     <div
-      class="px-4 sm:px-5 py-3 sm:py-4 border-b border-gray-100 flex items-center justify-between"
+      class="px-4 sm:px-5 py-3 sm:py-4 border-b app-border flex items-center justify-between"
     >
-      <h3 class="text-base sm:text-lg font-semibold text-gray-800">{{ $t('finance.wallets') }}</h3>
+      <h3 class="text-base sm:text-lg font-semibold text-app-text">{{ $t('finance.wallets') }}</h3>
       <q-btn
         flat
         round
         icon="add"
         size="sm"
         @click="showModal = true"
-        class="hover:bg-gray-100 touch-manipulation"
+        class="app-interactive-muted touch-manipulation"
       />
     </div>
 
     <SkeletonLoader v-if="isLoading" type="wallet-list" />
 
     <div v-else-if="!wallets?.length" class="p-6 text-center">
-      <q-icon name="wallet" size="40px" class="text-gray-300 mb-2" />
-      <p class="text-gray-400 text-sm">{{ $t('finance.noWallets') }}</p>
+      <q-icon name="wallet" size="40px" class="app-text-muted mb-2" />
+      <p class="app-text-muted text-sm">{{ $t('finance.noWallets') }}</p>
     </div>
 
     <q-list v-else separator class="rounded-lg overflow-hidden">
@@ -99,21 +99,32 @@ watch(
   { deep: true }
 );
 
-const handleNewTransaction = (newTransactions: any[], oldTransactions: any[]) => {
-  if (newTransactions.length <= oldTransactions.length || !selectedWallet.value) {
+const handleNewTransaction = (newTransactions: Transaction[], oldTransactions: Transaction[]) => {
+  const newTransaction = newTransactions.find((transaction) => {
+    return !oldTransactions.some((oldTransaction) => oldTransaction.id === transaction.id);
+  });
+
+  if (!newTransaction) {
     return;
   }
 
-  const newTransaction = newTransactions.find((t) => !oldTransactions.some((ot) => ot.id === t.id));
-  if (newTransaction && newTransaction.walletId === selectedWallet.value) {
-    walletTransactions.value[selectedWallet.value]?.push(newTransaction);
+  const cachedTransactions = walletTransactions.value[newTransaction.walletId];
+
+  if (!cachedTransactions) {
+    return;
+  }
+
+  const alreadyExists = cachedTransactions.some((transaction) => transaction.id === newTransaction.id);
+
+  if (!alreadyExists) {
+    walletTransactions.value[newTransaction.walletId] = [...cachedTransactions, newTransaction];
   }
 };
 
 watch(
-  transactions,
-  (newTransactions, oldTransactions) => handleNewTransaction(newTransactions, oldTransactions),
-  { deep: true }
+  () => transactions.value.slice(),
+  (newTransactions, oldTransactions) => handleNewTransaction(newTransactions, oldTransactions ?? []),
+  { deep: false }
 );
 
 const handleDeleteWallet = (id: string) => {

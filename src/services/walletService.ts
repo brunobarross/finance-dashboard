@@ -1,6 +1,13 @@
 import api from '../api/axios';
 import { WalletDTO } from '../types/api';
 
+interface CreateWalletDTO {
+  name: string;
+  color: string;
+  icon: string;
+  userId: string;
+}
+
 class WalletService {
   async getAll(): Promise<WalletDTO[]> {
     try {
@@ -22,7 +29,7 @@ class WalletService {
     }
   }
 
-  async create(wallet: Omit<WalletDTO, 'id'>): Promise<WalletDTO> {
+  async create(wallet: CreateWalletDTO): Promise<WalletDTO> {
     try {
       const response = await api.post<WalletDTO>('/wallets', wallet);
       return response.data;

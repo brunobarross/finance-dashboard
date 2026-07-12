@@ -1,6 +1,8 @@
 <template>
-  <q-page class="flex flex-center bg-gradient-to-br from-gray-100 to-gray-200 p-4">
-    <q-card class="w-full max-w-md shadow-2xl rounded-2xl overflow-hidden transition-all duration-500">
+  <q-page class="app-page flex flex-center bg-gradient-to-br from-app-bg to-app-surface-muted p-4">
+    <q-card
+      class="app-surface w-full max-w-md shadow-2xl rounded-2xl overflow-hidden transition-all duration-500"
+    >
       <q-card-section class="bg-gradient-to-r from-primary-600 to-primary-800 text-white py-8 text-center relative">
         <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
           <q-icon name="account_balance_wallet" size="150px" class="absolute -top-10 -right-10 rotate-12" />
@@ -9,22 +11,22 @@
         <div class="text-subtitle1 opacity-90">{{ $t('auth.subtitle') }}</div>
       </q-card-section>
 
-      <q-card-section class="p-6 sm:p-10 bg-white">
+      <q-card-section class="p-6 sm:p-10 bg-app-surface">
         <q-form @submit.prevent="onSubmit" class="space-y-5">
           <div class="space-y-1">
-            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">
+            <label class="text-xs font-bold app-text-muted uppercase tracking-wider ml-1">
               {{ $t('auth.username') }}
             </label>
             <q-input
               v-model="username"
               outlined
               dense
-              bg-color="gray-50"
+              bg-color="transparent"
               color="primary"
               lazy-rules
               :rules="[(val) => (val && val.length > 0) || $t('auth.usernameRequired')]"
               :disable="loading"
-              class="rounded-lg transition-shadow hover:shadow-sm"
+              class="login-field rounded-lg transition-shadow hover:shadow-sm"
             >
               <template v-slot:prepend>
                 <q-icon name="person" class="text-primary-400" size="20px" />
@@ -33,7 +35,7 @@
           </div>
 
           <div class="space-y-1">
-            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">
+            <label class="text-xs font-bold app-text-muted uppercase tracking-wider ml-1">
               {{ $t('auth.password') }}
             </label>
             <q-input
@@ -41,12 +43,12 @@
               :type="isPasswordVisible ? 'text' : 'password'"
               outlined
               dense
-              bg-color="gray-50"
+              bg-color="transparent"
               color="primary"
               lazy-rules
               :rules="[(val) => (val && val.length > 0) || $t('auth.passwordRequired')]"
               :disable="loading"
-              class="rounded-lg transition-shadow hover:shadow-sm"
+              class="login-field rounded-lg transition-shadow hover:shadow-sm"
             >
               <template v-slot:prepend>
                 <q-icon name="lock" class="text-primary-400" size="20px" />
@@ -54,7 +56,7 @@
               <template v-slot:append>
                 <q-icon
                   :name="isPasswordVisible ? 'visibility_off' : 'visibility'"
-                  class="cursor-pointer text-gray-400 hover:text-primary transition-colors"
+                  class="cursor-pointer app-text-muted hover:text-primary transition-colors"
                   @click="isPasswordVisible = !isPasswordVisible"
                   size="20px"
                 />
@@ -80,8 +82,8 @@
         </q-form>
       </q-card-section>
 
-      <q-card-section class="text-center pb-8 bg-white">
-        <div class="text-gray-500 text-sm">
+      <q-card-section class="text-center pb-8 bg-app-surface">
+        <div class="app-text-muted text-sm">
           {{ $t('auth.noAccount') }}
           <button class="text-primary font-bold hover:underline bg-transparent border-none p-0 cursor-pointer transition-colors">
             {{ $t('auth.signUp') }}
@@ -99,13 +101,13 @@ import { useAuthApi, useApi } from 'src/composables';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import type { LoginResponse } from 'src/types';
-import { useFinanceStore } from 'src/stores/finance';
+import { useUserStore } from 'src/stores/user';
 
 const { login } = useAuthApi();
 const { loading, error, execute } = useApi<LoginResponse, any[]>(login);
 const $q = useQuasar();
 const router = useRouter();
-const financeStore = useFinanceStore();
+const userStore = useUserStore();
 
 const username = ref('');
 const password = ref('');
@@ -120,7 +122,7 @@ const onSubmit = async () => {
 
     if (!response?.accessToken) throw new Error();
     
-    financeStore.user = response.user;
+    userStore.user = response.user;
     
     Cookies.set('accessToken', response.accessToken, {
       secure: true,
@@ -153,9 +155,18 @@ const onSubmit = async () => {
 
 :deep(.q-field--outlined .q-field__control) {
   border-radius: 12px;
+  background: rgb(var(--app-surface-muted));
+  color: rgb(var(--app-text));
+  border-color: rgb(var(--app-border));
 }
 
-:deep(.q-field--outlined.q-field--focused .q-field__control) {
+:deep(.login-field .q-field__native),
+:deep(.login-field .q-field__prefix),
+:deep(.login-field .q-field__append) {
+  color: rgb(var(--app-text));
+}
+
+:deep(.login-field.q-field--outlined.q-field--focused .q-field__control) {
   box-shadow: 0 0 0 2px rgba(var(--q-primary), 0.1);
 }
 </style>

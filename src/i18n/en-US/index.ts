@@ -2,6 +2,9 @@ export default {
   app: {
     title: 'Finance Dashboard',
     shortTitle: 'Finance',
+    language: 'Language',
+    lightMode: 'Light mode',
+    darkMode: 'Dark mode',
   },
   auth: {
     welcome: 'Welcome Back',

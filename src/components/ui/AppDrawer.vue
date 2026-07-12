@@ -5,10 +5,10 @@
     :width="280"
     :breakpoint="1024"
     bordered
-    class="bg-white"
+    class="app-surface"
   >
-    <div class="p-4 border-b border-gray-200">
-      <h3 class="text-lg font-semibold text-gray-800">{{ $t('finance.wallets') }}</h3>
+    <div class="p-4 border-b app-border">
+      <h3 class="text-lg font-semibold text-app-text">{{ $t('finance.wallets') }}</h3>
     </div>
     <WalletsPanel />
   </q-drawer>

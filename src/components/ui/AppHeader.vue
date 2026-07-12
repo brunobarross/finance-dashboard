@@ -1,7 +1,13 @@
 <template>
-  <q-header class="bg-gradient-to-r from-primary-600 to-primary-800 shadow-lg">
-    <q-toolbar class="max-w-7xl mx-auto px-2 sm:px-4">
-      <q-btn flat round icon="menu" class="lg:hidden mr-2" @click="$emit('toggle-drawer')" />
+  <q-header class="app-header-gradient text-white shadow-lg transition-colors duration-300 h-16">
+    <q-toolbar class="max-w-7xl mx-auto px-2 sm:px-4 min-h-16 h-16">
+      <q-btn
+        flat
+        round
+        icon="menu"
+        class="lg:hidden mr-2 rounded-full hover:bg-white/10"
+        @click="$emit('toggle-drawer')"
+      />
       <q-icon name="account_balance_wallet" size="24px" class="mr-2" />
       <q-toolbar-title class="text-lg sm:text-xl font-bold tracking-tight">
         <span class="hidden sm:inline">{{ $t('app.title') }}</span>
@@ -9,26 +15,64 @@
       </q-toolbar-title>
 
       <div class="flex items-center gap-1 sm:gap-2">
-        <div v-if="userName" class="flex items-center text-white mr-1 sm:mr-2">
-          <q-icon name="person" size="18px" class="mr-1 opacity-80" />
-          <span class="text-xs sm:text-sm font-medium">{{ userName }}</span>
-        </div>
-        <q-select
-          v-model="locale"
-          :options="localeOptions"
-          dense
-          borderless
-          emit-value
-          map-options
-          options-dense
-          class="bg-white/10 rounded-lg px-2"
-        >
-          <template v-slot:selected-item="scope">
-            <span class="text-white text-xs font-medium uppercase">{{
-              scope.opt.value.split('-')[0]
-            }}</span>
-          </template>
-        </q-select>
+        <q-btn flat round class="rounded-full p-1 hover:bg-white/10">
+          <q-avatar color="white" text-color="primary" size="36px" class="text-xs font-bold">
+            {{ userInitials }}
+          </q-avatar>
+
+          <q-menu
+            anchor="bottom right"
+            self="top right"
+            class="app-surface rounded-2xl shadow-xl min-w-[260px] overflow-hidden"
+          >
+            <div class="app-surface-muted border-b app-border px-4 py-3">
+              <div class="text-sm font-semibold text-app-text">
+                {{ userName || $t('app.title') }}
+              </div>
+              <div class="text-xs app-text-muted mt-1">
+                {{ currentLocaleLabel }}
+              </div>
+            </div>
+
+            <div class="px-4 py-4 space-y-4">
+              <div>
+                <div class="text-xs font-semibold uppercase tracking-wide app-text-muted mb-2">
+                  {{ $t('app.language') }}
+                </div>
+                <q-select
+                  v-model="locale"
+                  :options="localeOptions"
+                  dense
+                  outlined
+                  emit-value
+                  map-options
+                  options-dense
+                  class="rounded-xl"
+                  popup-content-class="app-surface text-app-text"
+                />
+              </div>
+
+              <div class="flex items-center justify-between gap-3">
+                <div>
+                  <div class="text-sm font-medium text-app-text">{{ themeLabel }}</div>
+                  <div class="text-xs app-text-muted">
+                    {{ isDark ? $t('app.darkMode') : $t('app.lightMode') }}
+                  </div>
+                </div>
+
+                <q-toggle
+                  :model-value="isDark"
+                  @update:model-value="setTheme"
+                  checked-icon="dark_mode"
+                  unchecked-icon="light_mode"
+                  keep-color
+                  color="amber"
+                  dense
+                />
+              </div>
+            </div>
+          </q-menu>
+        </q-btn>
 
         <q-btn
           flat
@@ -46,14 +90,34 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '../../stores/user';
 import { useFinanceStore } from '../../stores/finance';
+import { useTheme } from '../../composables/useTheme';
 
-const { locale } = useI18n();
+const { locale, t } = useI18n();
 const { userName } = storeToRefs(useUserStore());
 const { wallets } = storeToRefs(useFinanceStore());
+const { isDark, setTheme } = useTheme();
+
+const themeLabel = computed(() => (isDark.value ? t('app.darkMode') : t('app.lightMode')));
+const userInitials = computed(() => {
+  if (!userName.value) {
+    return 'FD';
+  }
+
+  return userName.value
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() || '')
+    .join('');
+});
+const currentLocaleLabel = computed(
+  () => localeOptions.find((option) => option.value === locale.value)?.label || locale.value
+);
 
 const localeOptions = [
   { label: 'English', value: 'en-US' },

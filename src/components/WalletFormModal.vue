@@ -1,7 +1,7 @@
 <template>
-  <q-card class="w-full max-w-md mx-auto" style="min-width: 280px; max-width: 95vw">
-    <q-card-section class="bg-primary-50 q-pa-md sm:q-pa-md">
-      <h3 class="text-base sm:text-lg font-semibold text-gray-800">
+  <q-card class="app-surface w-full max-w-md mx-auto" style="min-width: 280px; max-width: 95vw">
+    <q-card-section class="app-surface-muted q-pa-md sm:q-pa-md border-b app-border">
+      <h3 class="text-base sm:text-lg font-semibold text-app-text">
         {{ $t('finance.newWallet') }}
       </h3>
     </q-card-section>
@@ -9,7 +9,7 @@
     <q-card-section class="q-pa-md sm:q-pa-md">
       <q-form @submit.prevent="handleSubmit" class="space-y-3 sm:space-y-4">
         <div>
-          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1"
+          <label class="block text-xs sm:text-sm font-medium app-text-muted mb-1"
             >{{ $t('finance.name') }} *</label
           >
           <q-input
@@ -23,7 +23,7 @@
         </div>
 
         <div>
-          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">{{
+          <label class="block text-xs sm:text-sm font-medium app-text-muted mb-2">{{
             $t('finance.icon')
           }}</label>
           <q-select
@@ -38,7 +38,7 @@
         </div>
 
         <div>
-          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">{{
+          <label class="block text-xs sm:text-sm font-medium app-text-muted mb-2">{{
             $t('finance.color')
           }}</label>
           <div class="flex flex-wrap gap-2">

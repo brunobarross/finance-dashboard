@@ -38,11 +38,12 @@ export const useFinanceStore = defineStore('finance', () => {
 
   const addTransaction = async (transaction: Omit<Transaction, 'id' | 'userId'>) => {
     if (!userStore.userId) throw new Error('User not authenticated');
-    await originalAddTransaction({
+    const createdTransaction = await originalAddTransaction({
       ...transaction,
       userId: userStore.userId,
     } as Omit<Transaction, 'id'>);
     await refreshDashboardSummary();
+    return createdTransaction;
   };
 
   const addWallet = async (wallet: Omit<Wallet, 'id' | 'userId'>) => {

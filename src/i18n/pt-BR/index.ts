@@ -2,6 +2,9 @@ export default {
   app: {
     title: 'Dashboard Financeiro',
     shortTitle: 'Finanças',
+    language: 'Idioma',
+    lightMode: 'Modo claro',
+    darkMode: 'Modo escuro',
   },
   auth: {
     welcome: 'Bem-vindo de volta',

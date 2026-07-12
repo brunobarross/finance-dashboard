@@ -1,7 +1,7 @@
 <template>
-  <q-card class="w-full max-w-md mx-auto" style="min-width: 280px; max-width: 95vw">
-    <q-card-section class="bg-primary-50 q-pa-md sm:q-pa-md">
-      <h3 class="text-base sm:text-lg font-semibold text-gray-800">
+  <q-card class="app-surface w-full max-w-md mx-auto" style="min-width: 280px; max-width: 95vw">
+    <q-card-section class="app-surface-muted q-pa-md sm:q-pa-md border-b app-border">
+      <h3 class="text-base sm:text-lg font-semibold text-app-text">
         {{ $t('finance.newTransaction') }}
       </h3>
     </q-card-section>
@@ -9,7 +9,7 @@
     <q-card-section class="q-pa-md sm:q-pa-md h-full">
       <q-form @submit.prevent="handleSubmit" class="space-y-3 sm:space-y-4 flex flex-col">
         <div>
-          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1"
+          <label class="block text-xs sm:text-sm font-medium app-text-muted mb-1"
             >{{ $t('finance.name') }} *</label
           >
           <q-input
@@ -24,7 +24,7 @@
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1"
+            <label class="block text-xs sm:text-sm font-medium app-text-muted mb-1"
               >{{ $t('finance.value') }} (R$) *</label
             >
 
@@ -43,7 +43,7 @@
           </div>
 
           <div>
-            <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">{{
+            <label class="block text-xs sm:text-sm font-medium app-text-muted mb-1">{{
               $t('finance.installment')
             }}</label>
             <q-input
@@ -58,7 +58,7 @@
         </div>
 
         <div>
-          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1"
+          <label class="block text-xs sm:text-sm font-medium app-text-muted mb-1"
             >{{ $t('finance.date') }} *</label
           >
           <q-input outlined dense v-model="form.date" mask="date" :rules="['date']">
@@ -77,7 +77,7 @@
         </div>
 
         <div>
-          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1"
+          <label class="block text-xs sm:text-sm font-medium app-text-muted mb-1"
             >{{ $t('finance.wallet') }} *</label
           >
           <q-select
@@ -93,7 +93,7 @@
         </div>
 
         <div>
-          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">{{
+          <label class="block text-xs sm:text-sm font-medium app-text-muted mb-1">{{
             $t('finance.description')
           }}</label>
           <q-input
@@ -108,7 +108,7 @@
         </div>
 
         <div>
-          <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">{{
+          <label class="block text-xs sm:text-sm font-medium app-text-muted mb-2">{{
             $t('finance.type')
           }}</label>
           <q-btn-toggle
@@ -171,12 +171,17 @@ const form = ref({
 
 const walletOptions = computed(() => wallets.value.map((w) => ({ label: w.name, value: w.id })));
 
-const handleSubmit = () => {
-  addTransaction({
-    ...form.value,
-    date: date.formatDate(form.value.date, 'YYYY-MM-DD'),
-  });
-  $q.notify({ type: 'positive', message: t('actions.transactionAdded'), position: 'top' });
-  emit('close');
+const handleSubmit = async () => {
+  try {
+    await addTransaction({
+      ...form.value,
+      date: date.formatDate(form.value.date, 'YYYY-MM-DD'),
+    });
+    $q.notify({ type: 'positive', message: t('actions.transactionAdded'), position: 'top' });
+    emit('close');
+  } catch (error) {
+    console.error(error);
+    $q.notify({ type: 'negative', message: t('errors.generic'), position: 'top' });
+  }
 };
 </script>

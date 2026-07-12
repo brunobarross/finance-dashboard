@@ -20,6 +20,24 @@ export function useFinance() {
     return summary.value.currentBalance >= 0 ? 'text-green-600' : 'text-red-600';
   });
 
+  const normalizeTransaction = (transaction: Transaction) => ({
+    ...transaction,
+    installment: transaction.installment || '1/1',
+  });
+
+  const applyTransactionToWalletAmount = (transaction: Transaction, multiplier = 1) => {
+    const amountDelta = (transaction.type === 'INCOME' ? transaction.value : -transaction.value) * multiplier;
+
+    wallets.value = wallets.value.map((wallet) =>
+      wallet.id === transaction.walletId
+        ? {
+            ...wallet,
+            amount: Number((wallet.amount + amountDelta).toFixed(2)),
+          }
+        : wallet
+    );
+  };
+
   const fetchDashboardSummary = async (filters?: { month?: number; year?: number }) => {
     isLoading.value = true;
     error.value = null;
@@ -45,9 +63,9 @@ export function useFinance() {
     error.value = null;
     try {
       const data = await WalletService.getAll();
-      wallets.value = data.map((w) => ({
-        ...w,
-        icon: 'account_balance_wallet',
+      wallets.value = data.map((wallet) => ({
+        ...wallet,
+        icon: wallet.icon || 'account_balance_wallet',
       }));
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch wallets';
@@ -67,10 +85,7 @@ export function useFinance() {
     error.value = null;
     try {
       const data = await TransactionService.getAll(filters);
-      transactions.value = data.map((t) => ({
-        ...t,
-        installment: t.installment || '1/1',
-      }));
+      transactions.value = data.map(normalizeTransaction);
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch transactions';
       error.value = errorMessage;
@@ -87,10 +102,7 @@ export function useFinance() {
         month,
         year,
       });
-      return data.map((t) => ({
-        ...t,
-        installment: t.installment || '1/1',
-      }));
+      return data.map(normalizeTransaction);
     } catch (err) {
       console.error(`Failed to fetch transactions for wallet ${walletId}:`, err);
       return [];
@@ -113,7 +125,10 @@ export function useFinance() {
         userId: transaction.userId,
       };
       const data = await TransactionService.create(payload);
-      transactions.value.push(data);
+      const normalizedTransaction = normalizeTransaction(data);
+      transactions.value.push(normalizedTransaction);
+      applyTransactionToWalletAmount(normalizedTransaction);
+      return normalizedTransaction;
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to add transaction';
       error.value = errorMessage;
@@ -128,8 +143,12 @@ export function useFinance() {
     isLoading.value = true;
     error.value = null;
     try {
+      const deletedTransaction = transactions.value.find((transaction) => transaction.id === id);
       await TransactionService.delete(id);
       transactions.value = transactions.value.filter((t) => t.id !== id);
+      if (deletedTransaction) {
+        applyTransactionToWalletAmount(deletedTransaction, -1);
+      }
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to delete transaction';
       error.value = errorMessage;
@@ -154,6 +173,7 @@ export function useFinance() {
       wallets.value.push({
         ...data,
         icon: wallet.icon || 'account_balance_wallet',
+        amount: data.amount ?? 0,
       });
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to add wallet';

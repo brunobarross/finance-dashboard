@@ -18,6 +18,7 @@ export interface Wallet {
   color: string;
   icon: string;
   userId: string;
+  amount?: number;
 }
 
 export interface MonthData {

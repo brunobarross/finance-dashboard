@@ -1,5 +1,5 @@
 <template>
-  <q-item clickable v-ripple class="py-3 sm:py-4 px-3 sm:px-5 hover:bg-gray-50 transition-colors">
+  <q-item clickable v-ripple class="py-3 sm:py-4 px-3 sm:px-5 app-interactive-muted">
     <q-item-section avatar class="min-w-0">
       <div
         :class="[
@@ -16,13 +16,14 @@
     </q-item-section>
 
     <q-item-section class="min-w-0">
-      <q-item-label class="font-medium text-gray-800 text-sm sm:text-base truncate"
+      <q-item-label class="font-medium text-app-text text-sm sm:text-base truncate"
         >{{ transaction.name }}
+        <q-tooltip>{{ transaction.name }}</q-tooltip>
       </q-item-label>
-      <q-item-label caption class="text-gray-500 text-xs sm:text-sm hidden sm:block">
-        {{ getWalletName(transaction.walletId) }} - {{ transaction.description }}
+      <q-item-label caption class="app-text-muted text-xs sm:text-sm hidden sm:block">
+        {{ getWalletName() }} - {{ transaction.description }}
       </q-item-label>
-      <q-item-label caption class="text-gray-500 text-xs sm:text-sm sm:hidden">
+      <q-item-label caption class="app-text-muted text-xs sm:text-sm sm:hidden">
         {{ transaction.description }}
       </q-item-label>
     </q-item-section>
@@ -36,7 +37,13 @@
       >
         {{ transaction.type === 'INCOME' ? '+' : '-' }}{{ formatCurrency(transaction.value) }}
       </q-item-label>
-      <q-item-label caption class="text-gray-400 text-xs">
+      <q-item-label
+        caption
+        :class="[
+          'text-xs',
+          isLastInstallment(transaction.installment) ? 'text-amber-600 font-semibold' : 'app-text-muted',
+        ]"
+      >
         {{ transaction.installment }}
       </q-item-label>
     </q-item-section>
@@ -69,8 +76,25 @@ const $q = useQuasar();
 const { deleteTransaction } = useFinanceStore();
 const { t } = useI18n();
 
-const getWalletName = (walletId: string): string => {
+const getWalletName = (): string => {
   return t('finance.walletLabel');
+};
+
+const isLastInstallment = (installment?: string): boolean => {
+  if (!installment) {
+    return false;
+  }
+
+  const match = installment.match(/^(\d+)\/(\d+)$/);
+
+  if (!match) {
+    return false;
+  }
+
+  const current = Number(match[1]);
+  const total = Number(match[2]);
+
+  return total > 1 && current === total;
 };
 
 const handleDelete = (id: string) => {

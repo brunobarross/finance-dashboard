@@ -2,6 +2,9 @@ export default {
   app: {
     title: 'Panel Financiero',
     shortTitle: 'Finanzas',
+    language: 'Idioma',
+    lightMode: 'Modo claro',
+    darkMode: 'Modo oscuro',
   },
   auth: {
     welcome: 'Bienvenido de nuevo',

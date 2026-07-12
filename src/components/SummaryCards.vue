@@ -1,9 +1,9 @@
 <template>
   <div class="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-    <div class="bg-white rounded-xl shadow-sm p-4 sm:p-5 border-l-4 border-emerald-500">
+    <div class="app-surface rounded-xl p-4 sm:p-5 border-l-4 border-emerald-500">
       <div class="flex items-center justify-between">
         <div class="min-w-0 flex-1">
-          <p class="text-xs sm:text-sm text-gray-500 font-medium truncate">{{ $t('finance.income') }}</p>
+          <p class="text-xs sm:text-sm app-text-muted font-medium truncate">{{ $t('finance.income') }}</p>
           <p class="text-lg sm:text-2xl font-bold text-emerald-600 mt-1">
             {{ formatCurrency(totalReceipts) }}
           </p>
@@ -16,10 +16,10 @@
       </div>
     </div>
 
-    <div class="bg-white rounded-xl shadow-sm p-4 sm:p-5 border-l-4 border-red-500">
+    <div class="app-surface rounded-xl p-4 sm:p-5 border-l-4 border-red-500">
       <div class="flex items-center justify-between">
         <div class="min-w-0 flex-1">
-          <p class="text-xs sm:text-sm text-gray-500 font-medium truncate">{{ $t('finance.expenses') }}</p>
+          <p class="text-xs sm:text-sm app-text-muted font-medium truncate">{{ $t('finance.expenses') }}</p>
           <p class="text-lg sm:text-2xl font-bold text-red-600 mt-1">
             {{ formatCurrency(totalExpenses) }}
           </p>
@@ -34,13 +34,13 @@
 
     <div
       :class="[
-        'bg-white rounded-xl shadow-sm p-4 sm:p-5 border-l-4 xs:col-span-2 lg:col-span-1',
+        'app-surface rounded-xl p-4 sm:p-5 border-l-4 xs:col-span-2 lg:col-span-1',
         currentBalance >= 0 ? 'border-primary-500' : 'border-red-500',
       ]"
     >
       <div class="flex items-center justify-between">
         <div class="min-w-0 flex-1">
-          <p class="text-xs sm:text-sm text-gray-500 font-medium truncate">{{ $t('finance.balance') }}</p>
+          <p class="text-xs sm:text-sm app-text-muted font-medium truncate">{{ $t('finance.balance') }}</p>
           <p
             :class="[
               'text-lg sm:text-2xl font-bold mt-1 truncate',

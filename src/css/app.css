@@ -1,3 +1,73 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --app-bg: 241 245 249;
+    --app-surface: 255 255 255;
+    --app-surface-muted: 248 250 252;
+    --app-border: 226 232 240;
+    --app-text: 15 23 42;
+    --app-text-muted: 100 116 139;
+    --app-header-from: 37 99 235;
+    --app-header-to: 30 64 175;
+  }
+
+  .dark {
+    color-scheme: dark;
+    --app-bg: 15 23 42;
+    --app-surface: 30 41 59;
+    --app-surface-muted: 51 65 85;
+    --app-border: 71 85 105;
+    --app-text: 226 232 240;
+    --app-text-muted: 148 163 184;
+    --app-header-from: 30 41 59;
+    --app-header-to: 15 23 42;
+  }
+
+  html,
+  body,
+  #q-app {
+    @apply bg-app-bg text-app-text;
+  }
+
+  body {
+    @apply transition-colors duration-300;
+  }
+}
+
+@layer components {
+  .app-page {
+    @apply min-h-screen bg-app-bg text-app-text transition-colors duration-300;
+  }
+
+  .app-surface {
+    @apply border border-app-border bg-app-surface text-app-text shadow-sm transition-colors duration-300;
+  }
+
+  .app-surface-muted {
+    @apply border border-app-border bg-app-surface-muted text-app-text transition-colors duration-300;
+  }
+
+  .app-border {
+    @apply border-app-border;
+  }
+
+  .app-text-muted {
+    @apply text-app-text-muted;
+  }
+
+  .app-interactive-muted {
+    @apply transition-colors duration-200 hover:bg-app-surface-muted;
+  }
+
+  .app-header-gradient {
+    background-image: linear-gradient(
+      to right,
+      rgb(var(--app-header-from)),
+      rgb(var(--app-header-to))
+    );
+  }
+}
