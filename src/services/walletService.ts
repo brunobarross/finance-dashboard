@@ -9,9 +9,21 @@ interface CreateWalletDTO {
 }
 
 class WalletService {
-  async getAll(): Promise<WalletDTO[]> {
+  async getAll(filters?: { month?: number; year?: number }): Promise<WalletDTO[]> {
     try {
-      const response = await api.get<WalletDTO[]>('/wallets');
+      const params = new URLSearchParams();
+      if (filters?.month !== undefined) {
+        // Assuming month is 0-indexed (like JavaScript Date.getMonth()) and backend expects 1-indexed
+        const monthStr = (filters.month + 1).toString().padStart(2, '0');
+        params.append('month', monthStr);
+      }
+      if (filters?.year) {
+        params.append('year', filters.year.toString());
+      }
+
+      const queryString = params.toString();
+      const url = `/wallets${queryString ? `?${queryString}` : ''}`;
+      const response = await api.get<WalletDTO[]>(url);
       return response.data;
     } catch (error) {
       console.error('Error fetching wallets:', error);

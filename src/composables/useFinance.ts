@@ -26,7 +26,8 @@ export function useFinance() {
   });
 
   const applyTransactionToWalletAmount = (transaction: Transaction, multiplier = 1) => {
-    const amountDelta = (transaction.type === 'INCOME' ? transaction.value : -transaction.value) * multiplier;
+    const amountDelta =
+      (transaction.type === 'INCOME' ? transaction.value : -transaction.value) * multiplier;
 
     wallets.value = wallets.value.map((wallet) =>
       wallet.id === transaction.walletId
@@ -58,11 +59,11 @@ export function useFinance() {
     }
   };
 
-  const fetchWallets = async () => {
+  const fetchWallets = async (filters?: { month?: number; year?: number }) => {
     isLoading.value = true;
     error.value = null;
     try {
-      const data = await WalletService.getAll();
+      const data = await WalletService.getAll(filters);
       wallets.value = data.map((wallet) => ({
         ...wallet,
         icon: wallet.icon || 'account_balance_wallet',

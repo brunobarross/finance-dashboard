@@ -2,7 +2,7 @@ import WalletService from '../services/walletService';
 import { WalletDTO } from '../types/api';
 
 export function useWalletApi() {
-  const getWallets = () => WalletService.getAll();
+  const getWallets = (filters?: { month?: number; year?: number }) => WalletService.getAll(filters);
   const createWallet = (data: Omit<WalletDTO, 'id'>) => WalletService.create(data);
   const updateWallet = (id: string, data: Partial<WalletDTO>) => WalletService.update(id, data);
   const deleteWallet = (id: string) => WalletService.delete(id);
