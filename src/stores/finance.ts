@@ -66,13 +66,18 @@ export const useFinanceStore = defineStore('finance', () => {
   };
 
   onMounted(() => {
-    fetchWallets();
+    const filters = {
+      month: currentMonth.value.month,
+      year: currentMonth.value.year,
+    };
+    fetchWallets(filters);
     refreshDashboardSummary();
   });
 
   watch(
     currentMonth,
     () => {
+      fetchWallets({ month: currentMonth.value.month, year: currentMonth.value.year });
       refreshDashboardSummary();
     },
     { deep: true }
