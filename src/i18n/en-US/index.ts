@@ -16,6 +16,7 @@ export default {
     signUp: 'Sign up',
     usernameRequired: 'Please enter your username',
     passwordRequired: 'Please enter your password',
+    logout: 'Log Out',
   },
   finance: {
     income: 'Income',
@@ -46,6 +47,8 @@ export default {
     paymentsLabel: 'Payments',
     savingsLabel: 'Savings',
     transactionCount: '{count} transactions',
+    loadMore: 'Load more',
+    noMoreTransactions: 'All transactions loaded',
   },
   actions: {
     cancel: 'Cancel',
@@ -66,6 +69,7 @@ export default {
     walletPlaceholder: 'Ex: Nubank, Wallet',
     installmentPlaceholder: '1/12 or -',
     deleteWallet: 'Delete wallet',
+    copiedToClipboard: 'Transaction copied to clipboard!',
   },
   months: [
     'January',

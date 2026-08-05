@@ -26,6 +26,7 @@
         v-for="wallet in wallets"
         :key="wallet.id"
         :wallet="wallet"
+        :is-loading="isLoading"
         :is-selected="selectedWallet === wallet.id"
         :details="getSelectedWalletData(wallet.id)"
         @show="handleWalletShow(wallet.id)"

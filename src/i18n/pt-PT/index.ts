@@ -16,6 +16,7 @@ export default {
     signUp: 'Registe-se',
     usernameRequired: 'Por favor, insira o seu utilizador',
     passwordRequired: 'Por favor, insira a sua palavra-passe',
+    logout: 'Sair',
   },
   finance: {
     income: 'Receitas',
@@ -47,6 +48,8 @@ export default {
     paymentsLabel: 'Pagamentos',
     savingsLabel: 'Poupança',
     transactionCount: '{count} transações',
+    loadMore: 'Ver mais',
+    noMoreTransactions: 'Todas as transações foram carregadas',
   },
   actions: {
     cancel: 'Cancelar',
@@ -67,6 +70,7 @@ export default {
     walletPlaceholder: 'Ex: Nubank, Carteira',
     installmentPlaceholder: '1/12 ou -',
     deleteWallet: 'Eliminar carteira',
+    copiedToClipboard: 'Transação copiada para a área de transferência!',
   },
   months: [
     'Janeiro',

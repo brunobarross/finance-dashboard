@@ -16,6 +16,16 @@ export function useFinance() {
   const isLoading = ref(false);
   const error = ref<string | null>(null);
 
+  const currentPage = ref(0);
+  const pageSize = ref(10);
+  const totalPages = ref(1);
+  const totalElements = ref(0);
+  const isLoadingMore = ref(false);
+
+  const hasMoreTransactions = computed(() => {
+    return currentPage.value < totalPages.value - 1;
+  });
+
   const balanceColor = computed(() => {
     return summary.value.currentBalance >= 0 ? 'text-green-600' : 'text-red-600';
   });
@@ -84,15 +94,54 @@ export function useFinance() {
   }) => {
     isLoading.value = true;
     error.value = null;
+    currentPage.value = 0;
     try {
-      const data = await TransactionService.getAll(filters);
-      transactions.value = data.map(normalizeTransaction);
+      const data = await TransactionService.getAll({
+        ...filters,
+        page: 0,
+        pageSize: pageSize.value,
+      });
+      transactions.value = data.transactions.map(normalizeTransaction);
+      currentPage.value = data.pageNumber ?? 0;
+      pageSize.value = data.pageSize ?? 10;
+      totalPages.value = data.totalPages ?? 1;
+      totalElements.value = data.totalElements ?? data.transactions.length;
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch transactions';
       error.value = errorMessage;
       console.error(err);
     } finally {
       isLoading.value = false;
+    }
+  };
+
+  const loadMoreTransactions = async (filters?: {
+    month?: number;
+    year?: number;
+    wallet?: string;
+  }) => {
+    if (!hasMoreTransactions.value || isLoadingMore.value) return;
+
+    isLoadingMore.value = true;
+    error.value = null;
+    const nextPage = currentPage.value + 1;
+    try {
+      const data = await TransactionService.getAll({
+        ...filters,
+        page: nextPage,
+        pageSize: pageSize.value,
+      });
+      const newTransactions = data.transactions.map(normalizeTransaction);
+      transactions.value.push(...newTransactions);
+      currentPage.value = data.pageNumber ?? nextPage;
+      totalPages.value = data.totalPages ?? totalPages.value;
+      totalElements.value = data.totalElements ?? totalElements.value;
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load more transactions';
+      error.value = errorMessage;
+      console.error(err);
+    } finally {
+      isLoadingMore.value = false;
     }
   };
 
@@ -103,7 +152,7 @@ export function useFinance() {
         month,
         year,
       });
-      return data.map(normalizeTransaction);
+      return data.transactions.map(normalizeTransaction);
     } catch (err) {
       console.error(`Failed to fetch transactions for wallet ${walletId}:`, err);
       return [];
@@ -129,6 +178,7 @@ export function useFinance() {
       const normalizedTransaction = normalizeTransaction(data);
       transactions.value.push(normalizedTransaction);
       applyTransactionToWalletAmount(normalizedTransaction);
+      totalElements.value += 1;
       return normalizedTransaction;
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to add transaction';
@@ -150,6 +200,7 @@ export function useFinance() {
       if (deletedTransaction) {
         applyTransactionToWalletAmount(deletedTransaction, -1);
       }
+      totalElements.value = Math.max(0, totalElements.value - 1);
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to delete transaction';
       error.value = errorMessage;
@@ -210,9 +261,16 @@ export function useFinance() {
     isLoading,
     balanceColor,
     error,
+    currentPage,
+    pageSize,
+    totalPages,
+    totalElements,
+    isLoadingMore,
+    hasMoreTransactions,
     fetchDashboardSummary,
     fetchWallets,
     fetchTransactions,
+    loadMoreTransactions,
     getWalletTransactions,
     addTransaction,
     deleteTransaction,

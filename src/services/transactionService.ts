@@ -1,12 +1,14 @@
 import api from '../api/axios';
-import { TransactionDTO } from '../types/api';
+import { TransactionDTO, TransactionsPageDTO } from '../types/api';
 
 class TransactionService {
   async getAll(filters?: {
     month?: number;
     year?: number;
     wallet?: string;
-  }): Promise<TransactionDTO[]> {
+    page?: number;
+    pageSize?: number;
+  }): Promise<TransactionsPageDTO> {
     try {
       const params = new URLSearchParams();
       if (filters?.month !== undefined) {
@@ -15,11 +17,24 @@ class TransactionService {
       }
       if (filters?.year) params.append('year', filters.year.toString());
       if (filters?.wallet) params.append('walletId', filters.wallet);
+      if (filters?.page !== undefined) params.append('page', filters.page.toString());
+      if (filters?.pageSize !== undefined) params.append('pageSize', filters.pageSize.toString());
 
       const queryString = params.toString();
       const url = `/transactions${queryString ? `?${queryString}` : ''}`;
 
-      const response = await api.get<TransactionDTO[]>(url);
+      const response = await api.get<TransactionsPageDTO | TransactionDTO[]>(url);
+
+      if (Array.isArray(response.data)) {
+        return {
+          transactions: response.data,
+          pageNumber: filters?.page ?? 0,
+          pageSize: filters?.pageSize ?? response.data.length,
+          totalElements: response.data.length,
+          totalPages: 1,
+        };
+      }
+
       return response.data;
     } catch (error) {
       console.error('Error fetching transactions:', error);

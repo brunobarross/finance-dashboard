@@ -15,9 +15,16 @@ export const useFinanceStore = defineStore('finance', () => {
     summary,
     isLoading,
     error,
+    currentPage,
+    pageSize,
+    totalPages,
+    totalElements,
+    isLoadingMore,
+    hasMoreTransactions,
     fetchDashboardSummary,
     fetchWallets,
     fetchTransactions,
+    loadMoreTransactions,
     getWalletTransactions,
     addTransaction: originalAddTransaction,
     deleteTransaction: originalDeleteTransaction,
@@ -31,6 +38,13 @@ export const useFinanceStore = defineStore('finance', () => {
 
   const refreshDashboardSummary = async () => {
     await fetchDashboardSummary({
+      month: currentMonth.value.month,
+      year: currentMonth.value.year,
+    });
+  };
+
+  const loadMore = async () => {
+    await loadMoreTransactions({
       month: currentMonth.value.month,
       year: currentMonth.value.year,
     });
@@ -71,13 +85,16 @@ export const useFinanceStore = defineStore('finance', () => {
       year: currentMonth.value.year,
     };
     fetchWallets(filters);
+    fetchTransactions(filters);
     refreshDashboardSummary();
   });
 
   watch(
     currentMonth,
     () => {
-      fetchWallets({ month: currentMonth.value.month, year: currentMonth.value.year });
+      const filters = { month: currentMonth.value.month, year: currentMonth.value.year };
+      fetchWallets(filters);
+      fetchTransactions(filters);
       refreshDashboardSummary();
     },
     { deep: true }
@@ -92,6 +109,12 @@ export const useFinanceStore = defineStore('finance', () => {
     summary,
     isLoading,
     error,
+    currentPage,
+    pageSize,
+    totalPages,
+    totalElements,
+    isLoadingMore,
+    hasMoreTransactions,
     totalReceipts,
     totalExpenses,
     currentBalance,
@@ -101,6 +124,7 @@ export const useFinanceStore = defineStore('finance', () => {
     fetchDashboardSummary,
     fetchWallets,
     fetchTransactions,
+    loadMoreTransactions: loadMore,
     getWalletTransactions,
     addTransaction,
     deleteTransaction,

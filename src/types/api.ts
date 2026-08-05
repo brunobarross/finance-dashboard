@@ -24,3 +24,12 @@ export interface FinanceDashboardDTO {
   totalExpenses: number;
   currentBalance: number;
 }
+
+export interface TransactionsPageDTO {
+  transactions: TransactionDTO[];
+  pageNumber: number;
+  pageSize: number;
+  totalElements: number;
+  totalPages: number;
+}
+

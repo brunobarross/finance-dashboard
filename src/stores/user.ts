@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
+import Cookies from 'js-cookie';
 import type { User } from '../types';
 import { authService } from '../services/authService';
 
@@ -24,6 +25,11 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
+  const logout = () => {
+    user.value = null;
+    Cookies.remove('accessToken');
+  };
+
   return {
     user,
     userId,
@@ -31,5 +37,6 @@ export const useUserStore = defineStore('user', () => {
     isLoading,
     error,
     fetchUser,
+    logout,
   };
 });

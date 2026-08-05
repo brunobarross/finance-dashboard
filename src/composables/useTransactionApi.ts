@@ -2,8 +2,13 @@ import TransactionService from '../services/transactionService';
 import { TransactionDTO } from '../types/api';
 
 export function useTransactionApi() {
-  const getTransactions = (filters?: { month?: number; year?: number; wallet?: string }) =>
-    TransactionService.getAll(filters);
+  const getTransactions = (filters?: {
+    month?: number;
+    year?: number;
+    wallet?: string;
+    page?: number;
+    pageSize?: number;
+  }) => TransactionService.getAll(filters);
 
   const createTransaction = (data: Omit<TransactionDTO, 'id'>) => TransactionService.create(data);
 

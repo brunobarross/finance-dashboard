@@ -23,7 +23,15 @@
         <q-item-label class="font-medium text-app-text text-sm sm:text-base truncate">
           {{ wallet.name }}
         </q-item-label>
+        <q-skeleton
+          v-if="wallet.amount === undefined || wallet.amount === null || isLoading"
+          type="text"
+          width="75px"
+          height="18px"
+          class="mt-1"
+        />
         <q-item-label
+          v-else
           :class="[
             'text-xs sm:text-sm font-semibold mt-1',
             wallet.amount >= 0 ? 'text-emerald-600' : 'text-red-600',
@@ -64,11 +72,17 @@ interface WalletSummary {
   isLoading: boolean;
 }
 
-const props = defineProps<{
-  wallet: WalletDTO;
-  isSelected: boolean;
-  details?: WalletSummary;
-}>();
+const props = withDefaults(
+  defineProps<{
+    wallet: WalletDTO;
+    isSelected: boolean;
+    details?: WalletSummary;
+    isLoading?: boolean;
+  }>(),
+  {
+    isLoading: false,
+  }
+);
 
 const { formatCurrency } = useFormatters();
 

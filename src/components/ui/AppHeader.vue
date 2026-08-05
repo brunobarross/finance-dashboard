@@ -71,6 +71,22 @@
                 />
               </div>
             </div>
+
+            <div class="border-t app-border p-2">
+              <q-item
+                clickable
+                v-close-popup
+                @click="handleLogout"
+                class="rounded-xl text-red-500 hover:bg-red-500/10 transition-colors"
+              >
+                <q-item-section avatar class="min-w-0 pr-3">
+                  <q-icon name="logout" size="20px" />
+                </q-item-section>
+                <q-item-section class="font-medium text-sm">
+                  {{ $t('auth.logout') }}
+                </q-item-section>
+              </q-item>
+            </div>
           </q-menu>
         </q-btn>
 
@@ -93,14 +109,22 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
+import { useRouter } from 'vue-router';
 import { useUserStore } from '../../stores/user';
 import { useFinanceStore } from '../../stores/finance';
 import { useTheme } from '../../composables/useTheme';
 
 const { locale, t } = useI18n();
-const { userName } = storeToRefs(useUserStore());
+const router = useRouter();
+const userStore = useUserStore();
+const { userName } = storeToRefs(userStore);
 const { wallets } = storeToRefs(useFinanceStore());
 const { isDark, setTheme } = useTheme();
+
+const handleLogout = () => {
+  userStore.logout();
+  router.push('/login');
+};
 
 const themeLabel = computed(() => (isDark.value ? t('app.darkMode') : t('app.lightMode')));
 const userInitials = computed(() => {

@@ -7,7 +7,7 @@
         {{ $t('finance.transactions') }}
       </h3>
       <span class="text-xs sm:text-sm app-text-muted"
-        >{{ transactions.length }} {{ $t('finance.records') }}</span
+        >{{ totalElements || transactions.length }} {{ $t('finance.records') }}</span
       >
     </div>
 
@@ -16,21 +16,38 @@
       <p class="app-text-muted text-sm sm:text-base">{{ $t('finance.noTransactions') }}</p>
     </div>
 
-    <q-list v-else separator class="responsive-list">
-      <TransactionListItem
-        v-for="transaction in transactions"
-        :key="transaction.id"
-        :transactions="transactions"
-      />
-    </q-list>
+    <template v-else>
+      <q-list separator class="responsive-list">
+        <TransactionListItem
+          v-for="transaction in transactions"
+          :key="transaction.id"
+          :transactions="transactions"
+        />
+      </q-list>
+
+      <div v-if="hasMoreTransactions" class="p-4 text-center border-t app-border">
+        <q-btn
+          outline
+          color="primary"
+          class="w-full sm:w-auto font-medium transition-all duration-200 hover:shadow-md"
+          :loading="isLoadingMore"
+          :label="$t('finance.loadMore')"
+          icon-right="expand_more"
+          @click="loadMoreTransactions"
+        />
+      </div>
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useFinanceStore } from '../stores/finance';
+import TransactionListItem from './TransactionListItem.vue';
 
-const { transactions } = storeToRefs(useFinanceStore());
+const financeStore = useFinanceStore();
+const { transactions, totalElements, hasMoreTransactions, isLoadingMore } = storeToRefs(financeStore);
+const { loadMoreTransactions } = financeStore;
 </script>
 
 <style scoped>
